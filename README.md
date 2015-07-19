@@ -22,13 +22,21 @@ A slider allows the user to change the current time being viewed, and areas gray
 
 Users are able transitory describe changes to area.
 
-A wedding might have a dinner and the performance of a band. When those events are taking place, they are displayed on the map.
+A wedding might have a dinner and the performance of a band.
+
+When those events are taking place, they are displayed on the map.
+
+### Tickets
+
+An event has a specified number of reservations which may be claimed.
 
 ### Bidding
 
-Events allow for interested parties to place bids.
+Artists and caterers bid to provide the aforementioned meal and music.
 
-The wedding would define the meal and music, then artists and chefs bid to provide their services.
+Users can view competing bids.
+
+Planners can approve bids.
 
 ### Festival
 
@@ -36,7 +44,9 @@ An event defines a long interval, and artists bid durations of it.
 
 Different tickets go on sale with prices based on the accepted performers bids.
 
-Users reserve however many tickets they want and the first to pass a threshold becomes the actual event.
+Vendors could place "negative" bids to attend.
+
+Users reserve however many tickets they desire. The first to pass a threshold becomes the actual event.
 
 ### Lockers
 
@@ -46,4 +56,4 @@ Allow users to transfer remaining rental time to other users.
 
 ### Disputation
 
-Allow competing events to be created and members vote on which uses take place.
+Allow competing events to be created and members vote on which take place.
