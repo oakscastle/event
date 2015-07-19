@@ -6,7 +6,7 @@ This software is for collaboratively managing access to a space. The initial des
 
 ### Mapping
 
-A user can view a [map of the Castle](http://oakscastle.github.io/map/) [which is dynamically generated](wiki/Area-%E2%9E%94-SVG).
+A user can view a [map of the Castle](http://oakscastle.github.io/map/) [which is dynamically generated](https://github.com/oakscastle/event/wiki/Area-%E2%9E%94-SVG).
 
 A user can click on an area and view only it and its descendants.
 
