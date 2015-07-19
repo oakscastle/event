@@ -1,6 +1,6 @@
 # Oaks Management
 
-This software is for collaboratively managing access to a space. The initial design centers on [the Oaks Castle](http://oakscastle.org).
+This software is for collaboratively managing access to a space. The initial design centers on [the Oaks Castle](http://oakscastle.org) to fund its purchase for use as a public space.
 
 ## Use Cases
 
@@ -9,6 +9,12 @@ This software is for collaboratively managing access to a space. The initial des
 A user can view a [map of the Castle](http://oakscastle.github.io/map/) [which is dynamically generated](https://github.com/oakscastle/event/wiki/Area-%E2%9E%94-SVG).
 
 A user can click on an area and view only it and its descendants.
+
+### Floors
+
+Areas can have exclusive children only one of which may be active at a time.
+
+Users can see available floors and select between them via the map.
 
 ### Reservations
 
