@@ -1,44 +1,49 @@
-# An Oaks Event
+# Oaks Management
 
-This is to be software to coordinate an event. There are a variety of use cases currently under consideration:
+This software is for collaboratively managing access to a space. The initial design centers on [the Oaks Castle](http://oakscastle.org).
 
-## Mapping
+## Use Cases
 
-## Reservations
+### Mapping
 
-## Bidding
+A user can view a [map of the Castle](http://oakscastle.github.io/map/) [which is dynamically generated](wiki/Area-%E2%9E%94-SVG).
 
-## Festival
+A user can click on an area and view only it and its descendants.
 
-There is a field beside the Castle where a stage could be erected. I see the application interaction as:
+### Reservations
 
-1. Potential goers enter bands' email or twitter and the system sends them a request to place a bid.
-2. Bands bid a duration and a price.
-3. Users see bids and compose / edit schedules.
-4. Goers reserve tickets for lineups.
-5. Sales leader chosen as actual lineup.
+A user is able to view the availability of an area and create reservations.
 
-## Dinner
+### Dynamic Map
 
-Put tables in the ballroom and dining room. Allow participants to make reservations.
+A slider allows the user to change the current time being viewed, and areas gray out when reserved.
 
-Participants could vote on the chef / menu with another bidding process.
+### Events
 
-Could exist in conjunction with the festival. The diner orders from food vendors, and it's delivered when ready.
+Users are able transitory describe changes to area.
 
-## Hackathon
+A wedding might have a dinner and the performance of a band. When those events are taking place, they are displayed on the map.
 
-Use the upstairs offices to house work and meeting spaces to quickly build software.
+### Bidding
 
-## Lockers
+Events allow for interested parties to place bids.
+
+The wedding would define the meal and music, then artists and chefs bid to provide their services.
+
+### Festival
+
+An event defines a long interval, and artists bid durations of it.
+
+Different tickets go on sale with prices based on the accepted performers bids.
+
+Users reserve however many tickets they want and the first to pass a threshold becomes the actual event.
+
+### Lockers
 
 Allow access to a bank of electronically secured lockers.
 
 Allow users to transfer remaining rental time to other users.
 
-## Dungeon
+### Disputation
 
-Allow organizations to reserve areas, and give them the capacity to review reservations during their tenure.
-
-Have part of the basement be clothing optional..
-
+Allow competing events to be created and members vote on which uses take place.
