@@ -54,8 +54,8 @@ Return event info for an area.
         - (object)
             - id: *wedding* (string, required) - event guid
             - name: *Bob & Alice Get Hitched*
-            - starts_at: `2015-11-21@17:54` (string) - commencement time
-            - ends_at: `2015-11-21@17:54` (string) - termination time
+            - starts_at: *`2015-11-21@17:54`* (string) - commencement time
+            - ends_at: *`2015-11-21@17:54`* (string) - termination time
 
 ### Show [GET]
 
@@ -69,6 +69,12 @@ Return event info for an area.
 
 Return an event and all its descendants.
 
+### Show [GET]
+
++ Response 200 (application/json)
+
+    + Attributes
+        - events (array[event])
 
 
 # Data Structures
@@ -92,6 +98,14 @@ Return an event and all its descendants.
 - id: *h9iAjB* (string) - area guid
 - position (position) - in the containing Area
 - size (size) - in the containing Area
+
+# event
+- id: *wedding* (string, required) - event guid
+- name: *Bob & Alice Get Hitched*
+- starts_at: *`2015-11-21@17:54`* (string) - commencement time
+- ends_at: *`2015-11-21@17:54`* (string) - termination time
+- adds (array[child]) - areas that exist for the event
+- parts: toast, dinner, dance
 
 # house_single
 - area
