@@ -42,10 +42,10 @@ Return all reservatons for an area and its descendants.
     - to: `2015-11-31@17:54` (string) - upper bound
 
 + Attributes
-    - id: *MJHGT7* (required) - reservation guid
-    - for: *kitchen* (required) - area guid
-    - starts_at: *`2015-11-21@17:54`* - commencement time
-    - ends_at: *`2015-11-21@17:54`* - termination time
+    - id: *MJHGT7* (string, required) - reservation guid
+    - for: *kitchen* (string, required) - area guid
+    - starts_at: *`2015-11-21@17:54`* (string) - commencement time
+    - ends_at: *`2015-11-21@17:54`* (string) - termination time
 
 ### List Reservations [GET]
 
@@ -67,7 +67,7 @@ Return abbreviated event info for an area.
 
 + Attributes
     - id: *wedding* (string, required) - event guid
-    - name: *Bob & Alice Get Hitched*
+    - name: *Bob & Alice Get Hitched* (string)
     - starts_at: *`2015-11-21@17:54`* (string) - commencement time
     - ends_at: *`2015-11-21@17:54`* (string) - termination time
 
@@ -107,7 +107,7 @@ Return an event and all its descendants.
 
 # area
 - id: *FED210* (string, required) - object guid
-- name: *The Oaks Castle*
+- name: *The Oaks Castle* (string)
 - image_url: *//i.io/t.svg* (string) - svg to load
 - contains (array[child]) - child areas
 
@@ -119,11 +119,11 @@ Return an event and all its descendants.
 # event
 - id: *wedding* (string, required) - event guid
 - in: *kitchen* (string, required) - area guid
-- name: *Bob & Alice Get Hitched*
+- name: *Bob & Alice Get Hitched* (string)
 - starts_at: *`2015-11-21@17:54`* (string) - commencement time
 - ends_at: *`2015-11-21@17:54`* (string) - termination time
 - adds (array[child]) - areas that exist for the event
-- parts: toast, dinner, dance
+- parts: toast, dinner, dance (array) - constituent event guids
 
 # house_single
 - id: house
