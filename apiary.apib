@@ -53,21 +53,23 @@ Areas recursively represent the spaces available for perusal.
 
 Return events for an area.
 
-+ Attributes
++ Attributes (array)
     - id: *wedding* (string, required) - event guid
     - in: *house* (string) - area guid
-    - starts_at (string) - commencement time
-    - ends_at (string) - termination time
-    - adds (array) - areas added during the event
+    - starts_at: `2015-11-21@17:54` (string) - commencement time
+    - ends_at: `2015-11-21@17:54` (string) - termination time
+    - adds (array) - areas added for the event
         - (object)
             - id: *h9iAjB* (string) - area guid
             - position (position) - in the containing Area
             - size (size) - in the containing Area
-    - parts (array[string]) - guids of constituent events
+    - parts: dinner, dance, toasts (array[string]) - guids of constituent events
 
 ### Show [GET]
 
 + Response 200 (application/json)
+
+    + Attributes(Area Events)
 
 # Data Structures
 
