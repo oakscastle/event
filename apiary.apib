@@ -81,10 +81,11 @@ Return an event and all its descendants.
 - height: *20* (number)
 
 # area
-- id: *FED210* (string, required) - object guid
-- name: *The Oaks Castle*
-- image_url: *//i.io/t.svg* (string) - svg to load
-- contains (array[child])
+- area
+    - id: *FED210* (string, required) - object guid
+    - name: *The Oaks Castle*
+    - image_url: *//i.io/t.svg* (string) - svg to load
+    - contains (array[child])
 
 # child
 - id: *h9iAjB* (string) - area guid
@@ -92,42 +93,44 @@ Return an event and all its descendants.
 - size (size) - in the containing Area
 
 # house_single
-- id: house
-- image_url: house.svg
-- contains (array)
+- area
+    - id: house
+    - image_url: house.svg
+    - contains (array)
+        - (object)
+            - id: kitchen
+            - position
+                - x: 50 (number)
+                - y: 50 (number)
+            - size (object)
+                - width: 100 (number)
+                - height: 50 (number)
+        - (object)
+            - id: den
+            - position
+                - x: 25 (number)
+                - y: 20 (number)
+            - size
+                - width: 100 (number)
+                - height: 50 (number)
+
+# house_tree
+- areas (array)
+    - (house_single)
     - (object)
         - id: kitchen
-        - position
-            - x: 50 (number)
-            - y: 50 (number)
-        - size (object)
-            - width: 100 (number)
-            - height: 50 (number)
+        - image_url: kitchen.svg
     - (object)
         - id: den
-        - position
-            - x: 25 (number)
-            - y: 20 (number)
-        - size
-            - width: 100 (number)
-            - height: 50 (number)
-
-# house_tree (array)
-- (house_single)
-- (object)
-    - id: kitchen
-    - image_url: kitchen.svg
-- (object)
-    - id: den
-    - image_url: den.svg
-    - contains (array)
+        - image_url: den.svg
+        - contains (array)
+            - id: tv
+            - position
+                - x: 25 (number)
+                - y: 25(number)
+            - size
+                - width: 10 (number)
+                - height: 10 (number)
+    - (object)
         - id: tv
-        - position
-            - x: 25 (number)
-            - y: 25(number)
-        - size
-            - width: 10 (number)
-            - height: 10 (number)
-- (object)
-    - id: tv
-    - image: tv.svg
+        - image: tv.svg
