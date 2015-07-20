@@ -5,42 +5,40 @@ HOST: http://events.oakscastle.org/
 
 This is a service for collectively managing a shared space.
 
-The project roadmap coalescing [on GitHub](//github.com/oakscastle/event).
+[The project roadmap is coalescing on GitHub.](//github.com/oakscastle/event)
 
 # Group Areas
 
-## Area [/v1/areas/{guid}]
+Areas recursively represent the spaces available for perusal.
+
+## Area with Descendants [/v1/areas/{id}/tree]
 
 + Parameters
-  - id (string) - guid of area to display
+  - id: house (string) - guid of area to return
 
-+ Attributes
-    - id: *FED210* (string, required) - object guid
-    - image_url: *ipfs:rAndOmHash* (string) - svg to load
-    - contains (array)
-        - (object)
-            - id: *h9iAjB* (string) - area guid
-            - position (position) - in the containing Area
-            - size (size) - in the containing Area
++ Attributes (array)
+    - areas (object)
+        - id: *FED210* (string, required) - object guid
+        - name: The Oaks Castle (string)
+        - image_url: *ipfs:rAndOmHash* (string) - svg to load
+        - contains (array)
+            - (object)
+                - id: *h9iAjB* (string) - area guid
+                - position (position) - in the containing Area
+                - size (size) - in the containing Area
 
 ### Show [GET]
 
-+ Request
-
++ Request Empty (application/json)
     + Headers
-    
-            Location: /v1/areas/house
+
+            Content-Lenght: 0
 
 + Response 200 (application/json)
 
-+ Attributes (house_single)
-        
-## Area with Descendants [/v1/areas/{guid}/tree]
-
-### Show [GET]
+    + Attributes (Area with Descendants)
 
 + Request
-
     + Headers
     
             Location: /v1/areas/house/tree
@@ -48,6 +46,18 @@ The project roadmap coalescing [on GitHub](//github.com/oakscastle/event).
 + Response 200 (application/json)
 
     + Attributes (house_tree)
+
+# Group Events
+
++ Attributes
+    - id: *wedding* (string, required) - event guid
+    - starts_at (string) - commencement time
+    - ends_at (string) - termination time
+    - contains (array)
+        - (object)
+            - id: *h9iAjB* (string) - area guid
+            - position (position) - in the containing Area
+            - size (size) - in the containing Area
 
 # Data Structures
 
@@ -93,7 +103,7 @@ The project roadmap coalescing [on GitHub](//github.com/oakscastle/event).
         - position
             - x: 25 (number)
             - y: 25(number)
-        - size: (object)
+        - size
             - width: 10 (number)
             - height: 10 (number)
 - (object)
