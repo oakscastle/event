@@ -33,29 +33,8 @@ The project roadmap coalescing [on GitHub](//github.com/oakscastle/event).
 
 + Response 200 (application/json)
 
-    + Attributes
-        - id: house
-        - image_url: house.svg
-        - contains (array)
-            - (object)
-                - id: kitchen
-                - position
-                    - x: 50
-                    - y: 50
-                - size (object)
-                    - width: 100
-                    - height: 50
-            - (object)
-                - id: den
-                - position
-                    - x: 25
-                    - y: 20
-                - size
-                    - width: 100
-                    - height: 50
++ Attributes (house_response)
         
-    + Body
-
 ## Area with Descendants [/v1/areas/{guid}/tree]
 
 ### Show [GET]
@@ -79,3 +58,24 @@ The project roadmap coalescing [on GitHub](//github.com/oakscastle/event).
 # size (object)
 - width: 10 (number)
 - height: 20 (number)
+
+# house_response
+- id: house
+- image_url: house.svg
+- contains (array)
+    - (object)
+        - id: kitchen
+        - position
+            - x: 50 (number)
+            - y: 50 (number)
+        - size (object)
+            - width: 100 (number)
+            - height: 50 (number)
+    - (object)
+        - id: den
+        - position
+            - x: 25 (number)
+            - y: 20 (number)
+        - size
+            - width: 100 (number)
+            - height: 50 (number)
