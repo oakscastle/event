@@ -27,16 +27,34 @@ Areas recursively represent the spaces available for perusal.
 
     + Attributes (house_tree)
 
+## Area Reservations [/v1/areas/{id}/reservations/tree{?from,to}]
+
+Return all reservatons for an area and its descendants.
+
++ Attributes
+    - reservations (array)
+        - (object)
+            - id: *MJHGT7* (string, required) - reservation guid
+            - starts_at: `2015-11-21@17:54` (string) - commencement time
+            - ends_at: `2015-11-21@17:54` (string) - termination time
+
+### Show [GET]
+
++ Response 200 (application/json)
+
+    + Attributes(Area Reservations)
+
 ## Area Events [/v1/areas/{id}/events{?from,to}]
 
 Return event info for an area.
 
-+ Attributes (array)
-    - events (object)
-        - id: *wedding* (string, required) - event guid
-        - name: *Bob & Alice Get Hitched*
-        - starts_at: `2015-11-21@17:54` (string) - commencement time
-        - ends_at: `2015-11-21@17:54` (string) - termination time
++ Attributes
+    - events (array)
+        - (object)
+            - id: *wedding* (string, required) - event guid
+            - name: *Bob & Alice Get Hitched*
+            - starts_at: `2015-11-21@17:54` (string) - commencement time
+            - ends_at: `2015-11-21@17:54` (string) - termination time
 
 ### Show [GET]
 
@@ -45,6 +63,11 @@ Return event info for an area.
     + Attributes(Area Events)
 
 # Group Events
+
+## Event with Parts [/v1/events/{id}/tree]
+
+Return an event and all its descendants.
+
 
 
 # Data Structures
