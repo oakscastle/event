@@ -5,7 +5,7 @@ HOST: http://events.oakscastle.org/
 
 This is a service for collectively managing a shared space.
 
-The project roadmap is [on GitHub](//github.com/oakscastle/event).
+The project roadmap coalescing [on GitHub](//github.com/oakscastle/event).
 
 # Group Areas
 
@@ -16,10 +16,9 @@ The project roadmap is [on GitHub](//github.com/oakscastle/event).
 
 + Attributes
     - id: *FED210* (string, required) - object guid
-    - image_url: *ipfs:rAndOmHash* (string) - document to load
-        This should be a SVG file with a `viewBox`
+    - image_url: *ipfs:rAndOmHash* (string) - svg to load
     - contains (array)
-        - child (object)
+        - (object)
             - id: *h9iAjB* (string) - area guid
             - position (position) - in the containing Area
             - size (size) - in the containing Area
@@ -30,26 +29,43 @@ The project roadmap is [on GitHub](//github.com/oakscastle/event).
 
     + Headers
     
-            Location: /v1/areas/v1n2m3
+            Location: /v1/areas/house
 
 + Response 200 (application/json)
 
-    + Attributes (Area)
-        - Sample
-            - id: v1n2m3
-            + contains
-                + child
-                    - id: maddog
-                    + position
-                        - x: 25
-                        - y: 15
-                + child
-                    - id: maddog
-                    + position
-                        - x: 25
-                        - y: 15
+    + Attributes
+        - id: house
+        - image_url: house.svg
+        - contains (array)
+            - (object)
+                - id: kitchen
+                - position (object)
+                    - x: 10 (number)
+                    - y: 10 (number)
+                - size (object)
+                    - width: 100
+                    - height: 50
+            - (object)
+                - id: den
+                - size
+                    - width: 100
+                    - height: 50
         
     + Body
+
+## Area with Descendants [/v1/areas/{guid}/tree]
+
+### Show [GET]
+
++ Request
+
+    + Headers
+    
+            Location: /v1/areas/house/tree
+
++ Response 200 (application/json)
+
+    + Attributes (array[Area])
 
 # Data Structures
 
