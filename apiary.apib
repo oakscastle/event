@@ -34,9 +34,10 @@ Return all reservatons for an area and its descendants.
 + Attributes
     - reservations (array)
         - (object)
-            - id: *MJHGT7* (string, required) - reservation guid
-            - starts_at: `2015-11-21@17:54` (string) - commencement time
-            - ends_at: `2015-11-21@17:54` (string) - termination time
+            - id: *MJHGT7* (required) - reservation guid
+            - for: *kitchen* (required) - area guid
+            - starts_at: *`2015-11-21@17:54`* - commencement time
+            - ends_at: *`2015-11-21@17:54`* - termination time
 
 ### Show [GET]
 
