@@ -31,6 +31,11 @@ Areas recursively represent the spaces available for perusal.
 
 Return all reservatons for an area and its descendants.
 
++ Parameters
+    - id: house (string) - area guid
+    - from: `2015-11-21@17:54` (string) - lower bound
+    - to: `2015-11-31@17:54` (string) - upper bound
+
 + Attributes
     - reservations (array)
         - (object)
@@ -47,7 +52,12 @@ Return all reservatons for an area and its descendants.
 
 ## Area Events [/v1/areas/{id}/events{?from,to}]
 
-Return event info for an area.
+Return abbreviated event info for an area.
+
++ Parameters
+    - id: house (string) - area guid
+    - from: `2015-11-21@17:54` (string) - lower bound
+    - to: `2015-11-31@17:54` (string) - upper bound
 
 + Attributes
     - events (array)
@@ -116,7 +126,7 @@ Return an event and all its descendants.
         - position
             - x: 50 (number)
             - y: 50 (number)
-        - size (object)
+        - size
             - width: 100 (number)
             - height: 50 (number)
     - (object)
@@ -130,7 +140,7 @@ Return an event and all its descendants.
 
 # house_tree
 - areas (array)
-    - (house_single)
+        - (house_single)
     - (object)
         - id: kitchen
         - image_url: kitchen.svg
