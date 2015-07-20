@@ -11,10 +11,8 @@ This is a service for collectively managing a shared space.
 
 Areas recursively represent the spaces available.
 
-## Area with Descendants [/v1/areas/{id}/tree]
 
-+ Attributes
-    - areas (array[area])
+## Area with Descendants [/v1/areas/{id}/tree]
 
 + Parameters
   - id: house (string) - guid of area to return
@@ -84,6 +82,9 @@ Return abbreviated event info for an area.
 ## Event with Parts [/v1/events/{id}/tree]
 
 Return an event and all its descendants.
+
++ Parameters
+    - id: wedding (string) - event guid
 
 ### List Events [GET]
 
