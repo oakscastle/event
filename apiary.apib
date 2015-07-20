@@ -6,3 +6,28 @@ HOST: http://polls.apiblueprint.org/
 This is a service for managing relationships between areas, and allowing creating reservations.
 
 It will be accessed through [an Ember app](//github.com/oakscastle/event).
+
+# Areas
+
+## An Area [/v1/areas/{guid}]
+
++ Parameters
+  - id (string) - guid of area to display
+
+### Show [GET]
+
++ Attributes
+  - id (string) - object guid
+  - image_url (string) - document to load
+    This should be a SVG file with a `viewBox`
+  - contains (array)
+    - id (string) area guid
+    - position (object) - in the containing Area
+      - x (number)
+      - y (number)
+    - size (object) - in the containing Area
+      - width (number)
+      - height (number)
+
++ Response 200 (application/json)
+
