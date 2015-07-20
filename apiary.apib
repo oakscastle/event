@@ -49,15 +49,25 @@ Areas recursively represent the spaces available for perusal.
 
 # Group Events
 
+## Area Events [/v1/areas/{id}/events{?from,to}]
+
+Return events for an area.
+
 + Attributes
     - id: *wedding* (string, required) - event guid
+    - in: *house* (string) - area guid
     - starts_at (string) - commencement time
     - ends_at (string) - termination time
-    - contains (array)
+    - adds (array) - areas added during the event
         - (object)
             - id: *h9iAjB* (string) - area guid
             - position (position) - in the containing Area
             - size (size) - in the containing Area
+    - parts (array[string]) - guids of constituent events
+
+### Show [GET]
+
++ Response 200 (application/json)
 
 # Data Structures
 
