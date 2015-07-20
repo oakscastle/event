@@ -1,33 +1,62 @@
 FORMAT: 1A
-HOST: http://polls.apiblueprint.org/
+HOST: http://events.oakscastle.org/
 
-# Events
+# Oaks Management
 
-This is a service for managing relationships between areas, and allowing creating reservations.
+This is a service for collectively managing a shared space.
 
-It will be accessed through [an Ember app](//github.com/oakscastle/event).
+The project roadmap is [on GitHub](//github.com/oakscastle/event).
 
-# Areas
+# Group Areas
 
-## An Area [/v1/areas/{guid}]
+## Area [/v1/areas/{guid}]
 
 + Parameters
   - id (string) - guid of area to display
 
++ Attributes
+    - id: *FED210* (string, required) - object guid
+    - image_url: *ipfs:rAndOmHash* (string) - document to load
+        This should be a SVG file with a `viewBox`
+    - contains (array)
+        - child (object)
+            - id: *h9iAjB* (string) - area guid
+            - position (position) - in the containing Area
+            - size (size) - in the containing Area
+
 ### Show [GET]
 
-+ Attributes
-  - id (string) - object guid
-  - image_url (string) - document to load
-    This should be a SVG file with a `viewBox`
-  - contains (array)
-    - id (string) area guid
-    - position (object) - in the containing Area
-      - x (number)
-      - y (number)
-    - size (object) - in the containing Area
-      - width (number)
-      - height (number)
++ Request
+
+    + Headers
+    
+            Location: /v1/areas/v1n2m3
 
 + Response 200 (application/json)
 
+    + Attributes (Area)
+        - Sample
+            - id: v1n2m3
+            + contains
+                + child
+                    - id: maddog
+                    + position
+                        - x: 25
+                        - y: 15
+                + child
+                    - id: maddog
+                    + position
+                        - x: 25
+                        - y: 15
+        
+    + Body
+
+# Data Structures
+
+# position (object)
+- x: 5 (number)
+- y: 10 (number)
+
+# size (object)
+- width: 10 (number)
+- height: 20 (number)
