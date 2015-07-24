@@ -17,7 +17,7 @@ Areas recursively represent the spaces available.
     - id: *FED210* (string, required) - object guid
     - name: *The Oaks Castle* (string)
     - image: *//i.io/t.svg* (string) - svg to load
-    - contains (array[child]) - child areas
+    - contains (array[Contained Area]) - child areas
 
 ### View Area [GET]
 
@@ -70,7 +70,7 @@ Return all reservatons for an area and its descendants.
 + Response 200 (application/json)
 
     + Attributes
-        - reservations (array[Area Reservations])
+        - reservations (array[Reservation])
 
 # Group Events
 
@@ -82,7 +82,7 @@ Return all reservatons for an area and its descendants.
     - name: *Bob & Alice Get Hitched* (string)
     - starts_at: *`2015-11-21@17:54`* (string) - commencement time
     - ends_at: *`2015-11-21@17:54`* (string) - termination time
-    - adds (array[child]) - areas that exist for the event
+    - adds (array[Contained Area]) - areas that exist for the event
     - parts: toast, dinner, dance (array) - constituent event guids
 
 ### View Event [GET]
@@ -122,18 +122,12 @@ Return an event and all its descendants.
 
 # Data Structures
 
-# position (object)
+# Contained Area
+- area: *h9iAjB* (string) - area guid
 - x: *5* (number)
 - y: *10* (number)
-
-# size (object)
 - width: *10* (number)
 - height: *20* (number)
-
-# child
-- area: *h9iAjB* (string) - area guid
-- position (position) - in the containing Area
-- size (size) - in the containing Area
 
 # house_single
 - id: house
