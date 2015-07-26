@@ -21,7 +21,10 @@ Areas recursively represent the spaces available.
 
 ### View Area [GET]
 
-+ Response 501
++ Response 200
+
+    + Attributes
+        - area (Area)
 
 ## Area with Descendants [/areas/{id}/tree]
 
@@ -121,7 +124,13 @@ Return an event and all its descendants.
 
 # Group Bids
 
-## Bid [
+## Bid [/bids/{id}]
+
++ Attributes
+    - task
+    - amount
+    - bidder
+    - signature
 
 
 # Data Structures
