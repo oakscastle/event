@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: http://events.oakscastle.org/
+HOST: http://events.oakscastle.org/api/v1/
 
 # Oaks Management
 
@@ -11,7 +11,7 @@ A service for collectively managing shared space.
 
 Areas recursively represent the spaces available.
 
-## Area [/api/v1/areas/{id}]
+## Area [/areas/{id}]
 
 + Attributes
     - id: *FED210* (string, required) - object guid
@@ -23,7 +23,7 @@ Areas recursively represent the spaces available.
 
 + Response 501
 
-## Area with Descendants [/api/v1/areas/{id}/tree]
+## Area with Descendants [/areas/{id}/tree]
 
 + Parameters
     - id: house (string) - guid of area to return
@@ -42,7 +42,7 @@ Areas recursively represent the spaces available.
 
 # Group Reservations
 
-## Reservation [/api/v1/reservations/{id}]
+## Reservation [/reservations/{id}]
 
 + Attributes
   - id: *MJHGT7* (string, required) - reservation guid
@@ -54,7 +54,7 @@ Areas recursively represent the spaces available.
 
 + Response 501
 
-## Area Reservations [/api/v1/areas/{id}/tree/reservations{?from,to}]
+## Area Reservations [/areas/{id}/tree/reservations{?from,to}]
 
 Return all reservatons for an area and its descendants.
 
@@ -74,7 +74,7 @@ Return all reservatons for an area and its descendants.
 
 # Group Events
 
-## Event [/api/events/{id}]
+## Event [/events/{id}]
 
 + Attributes
     - id: *wedding* (string, required) - event guid
@@ -89,7 +89,7 @@ Return all reservatons for an area and its descendants.
 
 + Response 501
     
-## Area Events [/api/v1/areas/{id}/events{?from,to}]
+## Area Events [/areas/{id}/events{?from,to}]
 
 Return abbreviated event info for an area.
 
@@ -105,7 +105,7 @@ Return abbreviated event info for an area.
     + Attributes
         - events (array[Event])
 
-## Event with Parts [/api/v1/events/{id}/tree]
+## Event with Parts [/events/{id}/tree]
 
 Return an event and all its descendants.
 
@@ -118,6 +118,10 @@ Return an event and all its descendants.
 
     + Attributes
         - events (array[Event])
+
+# Group Bids
+
+## Bid [
 
 
 # Data Structures
