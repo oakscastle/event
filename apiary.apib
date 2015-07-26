@@ -1,0 +1,165 @@
+FORMAT: 1A
+HOST: http://events.oakscastle.org/
+
+# Oaks Management
+
+A service for collectively managing shared space.
+
+[The project roadmap is coalescing on GitHub.](//github.com/oakscastle/event)
+
+# Group Areas
+
+Areas recursively represent the spaces available.
+
+## Area [/api/v1/areas/{id}]
+
++ Attributes
+    - id: *FED210* (string, required) - object guid
+    - name: *The Oaks Castle* (string)
+    - image: *//i.io/t.svg* (string) - svg to load
+    - contains (array[Contained Area]) - child areas
+
+### View Area [GET]
+
++ Response 501
+
+## Area with Descendants [/api/v1/areas/{id}/tree]
+
++ Parameters
+    - id: house (string) - guid of area to return
+
+### List Areas [GET]
+
++ Request
+    + Headers
+    
+            Location: /api/v1/areas/house/tree
+
++ Response 200 (application/json)
+
+    + Attributes
+        - areas (house_tree)
+
+# Group Reservations
+
+## Reservation [/api/v1/reservations/{id}]
+
++ Attributes
+  - id: *MJHGT7* (string, required) - reservation guid
+  - for: *kitchen* (string, required) - area guid
+  - starts_at: *`2015-11-21@17:54`* (string) - commencement time
+  - ends_at: *`2015-11-21@17:54`* (string) - termination time
+
+### View Reservation [GET]
+
++ Response 501
+
+## Area Reservations [/api/v1/areas/{id}/tree/reservations{?from,to}]
+
+Return all reservatons for an area and its descendants.
+
++ Parameters
+    - id: house (string) - area guid
+    - from: `2015-11-21@17:54` (string) - lower bound
+    - to: `2015-11-31@17:54` (string) - upper bound
+
++ Attributes (array[Reservation])
+
+### List Reservations [GET]
+
++ Response 200 (application/json)
+
+    + Attributes
+        - reservations (array[Reservation])
+
+# Group Events
+
+## Event [/api/events/{id}]
+
++ Attributes
+    - id: *wedding* (string, required) - event guid
+    - in: *kitchen* (string, required) - area guid
+    - name: *Bob & Alice Get Hitched* (string)
+    - starts_at: *`2015-11-21@17:54`* (string) - commencement time
+    - ends_at: *`2015-11-21@17:54`* (string) - termination time
+    - adds (array[Contained Area]) - areas that exist for the event
+    - parts: toast, dinner, dance (array) - constituent event guids
+
+### View Event [GET]
+
++ Response 501
+    
+## Area Events [/api/v1/areas/{id}/events{?from,to}]
+
+Return abbreviated event info for an area.
+
++ Parameters
+    - id: house (string) - area guid
+    - from: `2015-11-21@17:54` (string) - lower bound
+    - to: `2015-11-31@17:54` (string) - upper bound
+
+### List Events [GET]
+
++ Response 200 (application/json)
+
+    + Attributes
+        - events (array[Event])
+
+## Event with Parts [/api/v1/events/{id}/tree]
+
+Return an event and all its descendants.
+
++ Parameters
+    - id: wedding (string) - event guid
+
+### List Events [GET]
+
++ Response 200 (application/json)
+
+    + Attributes
+        - events (array[Event])
+
+
+# Data Structures
+
+# Contained Area
+- area: *h9iAjB* (string) - area guid
+- x: *5* (number)
+- y: *10* (number)
+- width: *10* (number)
+- height: *20* (number)
+
+# house_single
+- id: house
+- image: house.svg
+- contains (array)
+    - (object)
+        - area: kitchen
+        - x: 50 (number)
+        - y: 50 (number)
+        - width: 100 (number)
+        - height: 50 (number)
+    - (object)
+        - area: den
+        - x: 25 (number)
+        - y: 20 (number)
+        - width: 100 (number)
+        - height: 50 (number)
+
+# house_tree (array)
+- (house_single)
+- (object)
+    - id: kitchen
+    - image: kitchen.svg
+- (object)
+    - id: den
+    - image: den.svg
+    - contains (array)
+        - area: tv
+        - x: 25 (number)
+        - y: 25(number)
+        - width: 10 (number)
+        - height: 10 (number)
+- (object)
+    - id: tv
+    - image: tv.svg
