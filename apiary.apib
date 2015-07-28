@@ -33,15 +33,48 @@ Areas recursively represent the spaces available.
 
 ### List Areas [GET]
 
-+ Request
-    + Headers
-    
-            Location: /api/v1/areas/house/tree
++ Parameters
+    - id: house
 
 + Response 200 (application/json)
 
     + Attributes
-        - areas (house_tree)
+        - areas (array)
+            - (object)
+                - id: house
+                - image: house.svg
+                - contains: c1, c2 (array)
+            - (object)
+                - id: kitchen
+                - image: kitchen.svg
+            - (object)
+                - id: den
+                - image: den.svg
+                - contains: c3 (array)
+            - (object)
+                - id: tv
+                - image: tv.svg
+        - containers (array)
+            - (object)
+                - id: c1
+                - area: kitchen
+                - x: 50 (number)
+                - y: 50 (number)
+                - width: 100 (number)
+                - height: 50 (number)
+            - (object)
+                - id: c2
+                - area: den
+                - x: 25 (number)
+                - y: 20 (number)
+                - width: 100 (number)
+                - height: 50 (number)
+            - (object)
+                - area: tv
+                - x: 25 (number)
+                - y: 25 (number)
+                - width: 10 (number)
+                - height: 10 (number)
 
 # Group Reservations
 
@@ -141,38 +174,3 @@ Return an event and all its descendants.
 - y: *10* (number)
 - width: *10* (number)
 - height: *20* (number)
-
-# house_single
-- id: house
-- image: house.svg
-- contains (array)
-    - (object)
-        - area: kitchen
-        - x: 50 (number)
-        - y: 50 (number)
-        - width: 100 (number)
-        - height: 50 (number)
-    - (object)
-        - area: den
-        - x: 25 (number)
-        - y: 20 (number)
-        - width: 100 (number)
-        - height: 50 (number)
-
-# house_tree (array)
-- (house_single)
-- (object)
-    - id: kitchen
-    - image: kitchen.svg
-- (object)
-    - id: den
-    - image: den.svg
-    - contains (array)
-        - area: tv
-        - x: 25 (number)
-        - y: 25(number)
-        - width: 10 (number)
-        - height: 10 (number)
-- (object)
-    - id: tv
-    - image: tv.svg
