@@ -2,6 +2,9 @@
 
 require 'nokogiri'
 require 'pry'
+require 'securerandom'
+require 'ostruct'
+require 'jbuilder'
 
 puts <<INFO if ARGV.empty?
   Usage: #{__FILE__} file.svg*
@@ -10,9 +13,55 @@ puts <<INFO if ARGV.empty?
 INFO
 
 ARGV.each do |filename|
-  file = File.open(filename)
-  svg = Nokogiri::XML(file)
-  file.close
+  svg = File.open(filename){ |file| Nokogiri::XML(file) }
+  dir = svg.at_xpath('//@area:base').value
 
-  binding.pry
+  svg.xpath('//*[@area:id]').map do |area|
+    name = area.attributes['id'].value
+    id = "#{dir}/#{name}"
+
+    FileUtils.mkdir_p id
+
+    filename = "#{id}/svg"
+    
+    if File.exist?(filename)
+      puts "Skipping Existing: #{filename}"
+    else
+      File.open(filename, 'w') do |file|
+        Nokogiri::XML::Builder.new do |xml|
+          xml.svg {
+            area
+          }
+        end.tap do |doc|
+          file.write doc.to_xml
+        end
+      end
+    end
+
+    area = {
+      id: id,
+      name: name,
+      image: filename
+    }
+    
+    container = {
+      id: SecureRandom.uuid,
+      area: id
+    }
+    
+    OpenStruct.new({ area: area, container: container })
+  end.tap do |out|
+    binding.pry
+
+    File.open("#{dir}/json", 'w') do |file|
+      Jbuilder.new do |json|
+        json.out {
+          json.areas out.map(&:area)
+          json.containers out.map(&:container)
+        }
+      end.tap do |doc|
+        file.write doc.to_json
+      end
+    end
+  end
 end
