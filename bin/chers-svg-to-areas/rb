@@ -1,0 +1,18 @@
+#!/ruby
+
+require 'nokogiri'
+require 'pry'
+
+puts <<INFO if ARGV.empty?
+  Usage: #{__FILE__} file.svg*
+    where file.svg has the format of http://oakscastle.github.io/map/floor/first/index.svg
+  Output: JSON matching https://github.com/oakscastle/event/
+INFO
+
+ARGV.each do |filename|
+  file = File.open(filename)
+  svg = Nokogiri::XML(file)
+  file.close
+
+  binding.pry
+end
