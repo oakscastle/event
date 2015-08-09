@@ -28,12 +28,13 @@ ARGV.each do |filename|
       puts "Skipping Existing: #{filename}"
     else
       File.open(filename, 'w') do |file|
-        Nokogiri::XML::Builder.new do |xml|
-          xml.svg {
-            area
-          }
+        Nokogiri::XML::Document.new.tap do |doc|
+          svg = Nokogiri::XML::Node.new('svg', doc)
+          doc.add_child(svg)
+          svg.add_child(area.dup)
         end.tap do |doc|
           file.write doc.to_xml
+          puts "XML to: #{filename}"
         end
       end
     end
@@ -51,9 +52,8 @@ ARGV.each do |filename|
     
     OpenStruct.new({ area: area, container: container })
   end.tap do |out|
-    binding.pry
-
-    File.open("#{dir}/json", 'w') do |file|
+    filename = "#{dir}/json"
+    File.open(filename, 'w') do |file|
       Jbuilder.new do |json|
         json.out {
           json.areas out.map(&:area)
@@ -61,6 +61,7 @@ ARGV.each do |filename|
         }
       end.tap do |doc|
         file.write doc.to_json
+        puts "JSON to: #{filename}"
       end
     end
   end
