@@ -5,12 +5,28 @@ require 'pry'
 require 'securerandom'
 require 'ostruct'
 require 'jbuilder'
+#require 'rubygems'
+require 'RMagick'
 
 puts <<INFO if ARGV.empty?
   Usage: #{__FILE__} file.svg*
     where file.svg has the format of http://oakscastle.github.io/map/floor/first/index.svg
   Output: JSON matching https://github.com/oakscastle/event/
 INFO
+                          
+def find_bounding_box(path)
+  include Magick
+
+  drawing = Magick::Draw.new
+  canvas = Image.new(1500,1000){ self.background_color = 'white' }
+
+  drawing.path path
+  drawing.draw canvas
+                            
+  canvas.trim!
+
+  { x: canvas.page.x, y: canvas.page.y, width: canvas.columns, height: canvas.rows }
+end
 
 ARGV.each do |filename|
   svg = File.open(filename){ |file| Nokogiri::XML(file) }
@@ -39,6 +55,9 @@ ARGV.each do |filename|
       end
     end
 
+
+
+    
     area = {
       id: id,
       name: name,
