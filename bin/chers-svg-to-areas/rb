@@ -5,8 +5,8 @@ require 'pry'
 require 'securerandom'
 require 'ostruct'
 require 'jbuilder'
-#require 'rubygems'
-require 'RMagick'
+require 'json'
+require 'rmagick'
 
 puts <<INFO if ARGV.empty?
   Usage: #{__FILE__} file.svg*
@@ -26,6 +26,12 @@ def find_bounding_box(path)
   canvas.trim!
 
   { x: canvas.page.x, y: canvas.page.y, width: canvas.columns, height: canvas.rows }
+end
+
+module Enumerable
+  def map_send(*args)
+    map { |obj| obj.send(*args) }
+  end
 end
 
 ARGV.each do |filename|
@@ -54,10 +60,7 @@ ARGV.each do |filename|
         end
       end
     end
-
-
-
-    
+   
     area = {
       id: id,
       name: name,
@@ -71,17 +74,23 @@ ARGV.each do |filename|
     
     OpenStruct.new({ area: area, container: container })
   end.tap do |out|
+    filename = "#{dir}/svg"
+    File.open(filename, 'w') do |file|
+      file.write svg.to_xml
+      puts "XML to: #{filename}"
+    end
+
     filename = "#{dir}/json"
     File.open(filename, 'w') do |file|
-      Jbuilder.new do |json|
-        json.out {
-          json.areas out.map(&:area)
-          json.containers out.map(&:container)
-        }
-      end.tap do |doc|
-        file.write doc.to_json
-        puts "JSON to: #{filename}"
-      end
+      areas = out.map(&:area)
+      areas.push({
+                   id: dir,
+                   name: 'The First Floor',
+                   image: "#{dir}/svg",
+                   containers: out.map(&:container).map_send(:[], :id)
+                 })
+      file.write(JSON::pretty_generate(JSON::parse({ areas: areas, containers: out.map(&:container) }.to_json)))
+      puts "JSON to: #{filename}"
     end
   end
 end
