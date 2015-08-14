@@ -26,7 +26,7 @@ def bounding_box_for(path)
   canvas.trim!
 
   { x: canvas.page.x, y: canvas.page.y, width: canvas.columns, height: canvas.rows }.tap do |out|
-    out.define_method(:to_viewbox) { "#{self.x} #{self.y} #{self.width} #{self.height}" }
+    out.class_eval{ define_method(:to_viewbox) { "#{self.x} #{self.y} #{self.width} #{self.height}" } }
   end
 end
 
