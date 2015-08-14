@@ -13,7 +13,7 @@ puts <<INFO if ARGV.empty?
     where file.svg has the format of http://oakscastle.github.io/map/floor/first/index.svg
   Output: JSON matching https://github.com/oakscastle/event/
 INFO
-                          
+
 def find_bounding_box(path)
   include Magick
 
@@ -37,6 +37,7 @@ end
 ARGV.each do |filename|
   svg = File.open(filename){ |file| Nokogiri::XML(file) }
   dir = svg.at_xpath('//@area:base').value
+  base_url = svg.at_xpath('//@area:url').value
 
   svg.xpath('//*[@area:id]').map do |area|
     name = area.attributes['id'].value
@@ -64,7 +65,7 @@ ARGV.each do |filename|
     area = {
       id: id,
       name: name,
-      image: filename
+      image: "#{base_url}filename"
     }
     
     container = {
@@ -74,23 +75,31 @@ ARGV.each do |filename|
     
     OpenStruct.new({ area: area, container: container })
   end.tap do |out|
-    filename = "#{dir}/svg"
+    filename = "#{dir}/json"
+    if File.exist?(filename)
+      puts "Skipping Existing: #{filename}"
+    else
+      File.open(filename, 'w') do |file|
+        areas = out.map(&:area)
+        areas.push({
+                     id: dir,
+                     name: 'The First Floor',
+                     image: "#{dir}/svg",
+                     containers: out.map(&:container).map_send(:[], :id)
+                   })
+        file.write(JSON::pretty_generate(JSON::parse({ areas: areas, containers: out.map(&:container) }.to_json)))
+        puts "JSON to: #{filename}"
+      end
+    end
+  end
+  
+  filename = "#{dir}/svg"
+  if File.exist?(filename)
+    puts "Skipping Existing: #{filename}"
+  else
     File.open(filename, 'w') do |file|
       file.write svg.to_xml
       puts "XML to: #{filename}"
-    end
-
-    filename = "#{dir}/json"
-    File.open(filename, 'w') do |file|
-      areas = out.map(&:area)
-      areas.push({
-                   id: dir,
-                   name: 'The First Floor',
-                   image: "#{dir}/svg",
-                   containers: out.map(&:container).map_send(:[], :id)
-                 })
-      file.write(JSON::pretty_generate(JSON::parse({ areas: areas, containers: out.map(&:container) }.to_json)))
-      puts "JSON to: #{filename}"
     end
   end
 end
