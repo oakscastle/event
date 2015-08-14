@@ -7,12 +7,21 @@ require 'ostruct'
 require 'jbuilder'
 require 'json'
 require 'rmagick'
+require 'uri'
+require 'optparse'
 
 puts <<INFO if ARGV.empty?
   Usage: #{__FILE__} file.svg*
     where file.svg has the format of http://oakscastle.github.io/map/floor/first/index.svg
   Output: JSON matching https://github.com/oakscastle/event/
 INFO
+
+options = OpenStruct.new
+OptionParser.new do |opts|
+  opts.on("-f", "--force", 'Overwrite') do |v|
+    options.force = v
+  end
+end.parse!
 
 def bounding_box_for(path)
   include Magick
@@ -42,12 +51,12 @@ end
 
 ARGV.each do |filename|
   svg = File.open(filename){ |file| Nokogiri::XML(file) }
-  dir = svg.at_xpath('//@area:base').value
-  base_url = svg.at_xpath('//@area:url').value
+  base = URI.unescape(svg.at_xpath('//@area:base').value)
+  host = "http://localhost/"
 
   svg.xpath('//*[@area:id]').map do |area|
     name = area.attributes['id'].value
-    id = "#{dir}/#{name}"
+    id = "#{base}/#{name}"
 
     FileUtils.mkdir_p id
 
@@ -55,7 +64,7 @@ ARGV.each do |filename|
     
     bbox = bounding_box_for(area)
 
-    if File.exist?(filename)
+    if File.exist?(filename) and not options.force
       puts "Skipping Existing: #{filename}"
     else
       File.open(filename, 'w') do |file|
@@ -76,7 +85,7 @@ ARGV.each do |filename|
     obj = {
       id: id,
       name: name,
-      image: "#{base_url}#{filename}"
+      image: "#{host}#{filename}"
     }
 
     container = {
@@ -87,16 +96,16 @@ ARGV.each do |filename|
     
     OpenStruct.new({ area: obj, container: container })
   end.tap do |out|
-    filename = "#{dir}/json"
-    if File.exist?(filename)
+    filename = "#{base}/json"
+    if File.exist?(filename) and not options.force
       puts "Skipping Existing: #{filename}"
     else
       File.open(filename, 'w') do |file|
         areas = out.map(&:area)
         areas.push({
-                     id: dir,
+                     id: 'house',
                      name: 'The First Floor',
-                     image: "#{dir}/svg",
+                     image: "#{host}#{base}/svg",
                      containers: out.map(&:container).map_send(:[], :id)
                    })
         file.write(JSON::pretty_generate(JSON::parse({ areas: areas, containers: out.map(&:container) }.to_json)))
@@ -105,8 +114,8 @@ ARGV.each do |filename|
     end
   end
   
-  filename = "#{dir}/svg"
-  if File.exist?(filename)
+  filename = "#{base}/svg"
+  if File.exist?(filename) and not options.force
     puts "Skipping Existing: #{filename}"
   else
     File.open(filename, 'w') do |file|
