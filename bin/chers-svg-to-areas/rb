@@ -52,15 +52,17 @@ ARGV.each do |filename|
     else
       File.open(filename, 'w') do |file|
         Nokogiri::XML::Document.new.tap do |doc|
-          svg = Nokogiri::XML::Node.new('svg', doc)
-          doc.add_child(svg)
-          svg.add_child(area.dup)
+          out = Nokogiri::XML::Node.new('svg', doc)
+          doc.add_child(out)
+          out.add_child(area.dup)
         end.tap do |doc|
           file.write doc.to_xml
           puts "XML to: #{filename}"
         end
       end
     end
+
+    area.remove
    
     area = {
       id: id,
