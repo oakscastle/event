@@ -76,16 +76,14 @@ ARGV.each do |filename|
     obj = {
       id: id,
       name: name,
-      image: "#{base_url}filename"
+      image: "#{base_url}#{filename}"
     }
 
     container = {
       id: SecureRandom.uuid,
       area: id
     }
-    container += bbox
-    
-    #bbox.each{ |k, v| container[k] = v }
+    bbox.each{ |k, v| container[k] = v }
     
     OpenStruct.new({ area: obj, container: container })
   end.tap do |out|
