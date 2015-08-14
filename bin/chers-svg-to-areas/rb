@@ -26,7 +26,7 @@ def bounding_box_for(path)
   canvas.trim!
 
   if path.name == 'rect'
-    path.to_h.slice(*%w(x y width height)).inject({}){ |memo, (k, v)| memo[k.to_sym] = v; memo }
+    path.to_h.slice(*%w(x y width height)).each_with_object({}){ |(k, v), obj| obj[k.to_sym] = v }
   else
     { x: canvas.page.x, y: canvas.page.y, width: canvas.columns, height: canvas.rows }
   end.tap do |out|
