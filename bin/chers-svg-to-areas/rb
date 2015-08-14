@@ -83,6 +83,9 @@ ARGV.each do |filename|
       id: SecureRandom.uuid,
       area: id
     }
+    container += bbox
+    
+    #bbox.each{ |k, v| container[k] = v }
     
     OpenStruct.new({ area: obj, container: container })
   end.tap do |out|
