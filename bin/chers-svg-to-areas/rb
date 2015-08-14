@@ -22,10 +22,14 @@ def bounding_box_for(path)
 
   drawing.path path
   drawing.draw canvas
-                            
+  
   canvas.trim!
 
-  { x: canvas.page.x, y: canvas.page.y, width: canvas.columns, height: canvas.rows }.tap do |out|
+  if path.name == 'rect'
+    path.to_h.slice(*%w(x y width height)).inject({}){ |memo, (k, v)| memo[k.to_sym] = v; memo }
+  else
+    { x: canvas.page.x, y: canvas.page.y, width: canvas.columns, height: canvas.rows }
+  end.tap do |out|
     out.class_eval{ define_method(:to_viewbox) { "#{self[:x]} #{self[:y]} #{self[:width]} #{self[:height]}" } }
   end
 end
@@ -50,7 +54,7 @@ ARGV.each do |filename|
     filename = "#{id}/svg"
     
     bbox = bounding_box_for(area)
-    
+
     if File.exist?(filename)
       puts "Skipping Existing: #{filename}"
     else
