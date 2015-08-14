@@ -14,7 +14,7 @@ puts <<INFO if ARGV.empty?
   Output: JSON matching https://github.com/oakscastle/event/
 INFO
 
-def find_bounding_box(path)
+def bounding_box_for(path)
   include Magick
 
   drawing = Magick::Draw.new
@@ -25,7 +25,9 @@ def find_bounding_box(path)
                             
   canvas.trim!
 
-  { x: canvas.page.x, y: canvas.page.y, width: canvas.columns, height: canvas.rows }
+  { x: canvas.page.x, y: canvas.page.y, width: canvas.columns, height: canvas.rows }.tap do |out|
+    out.define_method(:to_viewbox) { "#{self.x} #{self.y} #{self.width} #{self.height}" }
+  end
 end
 
 module Enumerable
@@ -47,12 +49,15 @@ ARGV.each do |filename|
 
     filename = "#{id}/svg"
     
+    bbox = bounding_box_for(area)
+    
     if File.exist?(filename)
       puts "Skipping Existing: #{filename}"
     else
       File.open(filename, 'w') do |file|
         Nokogiri::XML::Document.new.tap do |doc|
           out = Nokogiri::XML::Node.new('svg', doc)
+          out[:viewBox] = bbox.to_viewbox
           doc.add_child(out)
           out.add_child(area.dup)
         end.tap do |doc|
@@ -64,18 +69,18 @@ ARGV.each do |filename|
 
     area.remove
    
-    area = {
+    obj = {
       id: id,
       name: name,
       image: "#{base_url}filename"
     }
-    
+
     container = {
       id: SecureRandom.uuid,
       area: id
     }
     
-    OpenStruct.new({ area: area, container: container })
+    OpenStruct.new({ area: obj, container: container })
   end.tap do |out|
     filename = "#{dir}/json"
     if File.exist?(filename)
