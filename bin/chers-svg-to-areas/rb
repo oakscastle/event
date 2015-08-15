@@ -26,7 +26,13 @@ end.parse!
 
 def bounding_box_for(path)
   # binding.pry
-  
+
+  path[:viewBox] = "0 0 10000 10000"
+  path[:x] = 0
+  path[:y] = 0
+  path[:width] = 10000
+  path[:height] = 10000
+
   canvas = Magick::Image.from_blob(path.to_xml) do
     self.format = 'SVG'
     self.background_color = 'transparent'
