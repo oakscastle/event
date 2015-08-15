@@ -25,24 +25,31 @@ OptionParser.new do |opts|
 end.parse!
 
 def bounding_box_for(path)
-  # binding.pry
-
-  path[:viewBox] = "0 0 10000 10000"
-  path[:x] = 0
-  path[:y] = 0
-  path[:width] = 10000
-  path[:height] = 10000
-
-  canvas = Magick::Image.from_blob(path.to_xml) do
-    self.format = 'SVG'
-    self.background_color = 'transparent'
-  end
-  canvas = canvas.first.trim!
-
-  if path.name == 'rect'
+  case path.name
+  when 'rect'
     path.to_h.slice(*%w(x y width height)).each_with_object({}){ |(k, v), obj| obj[k.to_sym] = v }
-  else
+  when 'polygon', 'path'
+    drawing = Magick::Draw.new
+    canvas = Magick::Image.new(10000,10000) { self.background_color = 'white' }
+    case path.name
+    when 'polygon'
+      drawing.polygon *path[:points].split(/\s+|,/)
+    when 'path'
+      drawing.path path[:d]
+    end
+    drawing.draw canvas
+    canvas.trim!
     { x: canvas.page.x, y: canvas.page.y, width: canvas.columns, height: canvas.rows }
+  else
+=begin
+    images = Magick::Image.from_blob(path.to_xml) do
+      self.format = 'SVG'
+      self.background_color = 'transparent'
+    end
+    canvas = images.first.trim!
+    { x: canvas.page.x, y: canvas.page.y, width: canvas.columns, height: canvas.rows }
+=end
+    {}
   end.tap do |out|
     out.class_eval{ define_method(:to_viewbox) { "#{self[:x]} #{self[:y]} #{self[:width]} #{self[:height]}" } }
   end
@@ -83,7 +90,7 @@ ARGV.each do |filename|
       doc.add_child(out)
       out.add_child(area.dup)
       
-      bbox = bounding_box_for(out)
+      bbox = bounding_box_for(area)
 
       bbox.each{ |k, v| container[k] = v }
     
