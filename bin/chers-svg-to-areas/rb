@@ -1,4 +1,5 @@
 #!/ruby
+# coding: utf-8
 
 require 'nokogiri'
 require 'pry'
@@ -24,14 +25,12 @@ OptionParser.new do |opts|
 end.parse!
 
 def bounding_box_for(path)
-  include Magick
-
-  drawing = Magick::Draw.new
-  canvas = Image.new(1500,1000){ self.background_color = 'white' }
-
-  drawing.path path
-  drawing.draw canvas
+  # binding.pry
   
+  canvas = Magick::Image.from_blob(path.to_xml) do
+    self.format = 'SVG'
+    self.background_color = 'transparent'
+  end          
   canvas.trim!
 
   if path.name == 'rect'
@@ -62,17 +61,19 @@ ARGV.each do |filename|
 
     filename = "#{id}/svg"
     
-    bbox = bounding_box_for(area)
+    Nokogiri::XML::Document.new.tap do |doc|
+      out = Nokogiri::XML::Node.new('svg', doc)
+      out[:xmlns] = svg.namespaces['xmlns']
+      doc.add_child(out)
+      out.add_child(area.dup)
+      
+      bbox = bounding_box_for(out)
 
-    if File.exist?(filename) and not options.force
-      puts "Skipping Existing: #{filename}"
-    else
-      File.open(filename, 'w') do |file|
-        Nokogiri::XML::Document.new.tap do |doc|
-          out = Nokogiri::XML::Node.new('svg', doc)
+      if File.exist?(filename) and not options.force
+        puts "Skipping Existing: #{filename}"
+      else
+        File.open(filename, 'w') do |file|
           out[:viewBox] = bbox.to_viewbox
-          doc.add_child(out)
-          out.add_child(area.dup)
         end.tap do |doc|
           file.write doc.to_xml
           puts "XML to: #{filename}"
@@ -81,16 +82,16 @@ ARGV.each do |filename|
     end
 
     area.remove
-   
+
     obj = {
-      id: id,
+      id: id.gsub(/\//, '∕'),
       name: name,
       image: "#{host}#{filename}"
     }
 
     container = {
       id: SecureRandom.uuid,
-      area: id
+      area: id.gsub(/\//, '∕')
     }
     bbox.each{ |k, v| container[k] = v }
     
