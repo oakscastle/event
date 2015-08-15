@@ -30,8 +30,8 @@ def bounding_box_for(path)
   canvas = Magick::Image.from_blob(path.to_xml) do
     self.format = 'SVG'
     self.background_color = 'transparent'
-  end          
-  canvas.trim!
+  end
+  canvas = canvas.first.trim!
 
   if path.name == 'rect'
     path.to_h.slice(*%w(x y width height)).each_with_object({}){ |(k, v), obj| obj[k.to_sym] = v }
@@ -56,33 +56,8 @@ ARGV.each do |filename|
   svg.xpath('//*[@area:id]').map do |area|
     name = area.attributes['id'].value
     id = "#{base}/#{name}"
-
-    FileUtils.mkdir_p id
-
     filename = "#{id}/svg"
     
-    Nokogiri::XML::Document.new.tap do |doc|
-      out = Nokogiri::XML::Node.new('svg', doc)
-      out[:xmlns] = svg.namespaces['xmlns']
-      doc.add_child(out)
-      out.add_child(area.dup)
-      
-      bbox = bounding_box_for(out)
-
-      if File.exist?(filename) and not options.force
-        puts "Skipping Existing: #{filename}"
-      else
-        File.open(filename, 'w') do |file|
-          out[:viewBox] = bbox.to_viewbox
-        end.tap do |doc|
-          file.write doc.to_xml
-          puts "XML to: #{filename}"
-        end
-      end
-    end
-
-    area.remove
-
     obj = {
       id: id.gsub(/\//, '∕'),
       name: name,
@@ -93,8 +68,32 @@ ARGV.each do |filename|
       id: SecureRandom.uuid,
       area: id.gsub(/\//, '∕')
     }
-    bbox.each{ |k, v| container[k] = v }
+
+    FileUtils.mkdir_p id
+
+    Nokogiri::XML::Document.new.tap do |doc|
+      out = Nokogiri::XML::Node.new('svg', doc)
+      out[:xmlns] = svg.namespaces['xmlns']
+      doc.add_child(out)
+      out.add_child(area.dup)
+      
+      bbox = bounding_box_for(out)
+
+      bbox.each{ |k, v| container[k] = v }
     
+      if File.exist?(filename) and not options.force
+        puts "Skipping Existing: #{filename}"
+      else
+        File.open(filename, 'w') do |file|
+          out[:viewBox] = bbox.to_viewbox
+          file.write doc.to_xml
+          puts "XML to: #{filename}"
+        end
+      end
+    end
+
+    area.remove
+
     OpenStruct.new({ area: obj, container: container })
   end.tap do |out|
     filename = "#{base}/json"
