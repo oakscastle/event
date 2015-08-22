@@ -39,7 +39,7 @@ def bounding_box_for(path)
     canvas = Magick::Image.new(10000,10000) { self.background_color = 'white' }
     case path.name
     when 'polyline', 'polygon'
-      points = path[:points].split(/\s+|,/)
+      points = path[:points].split(/\s+|,/).map(&:to_f)
       drawing.send(path.name, *points)
     when 'path'
       drawing.path path[:d]
@@ -51,7 +51,7 @@ def bounding_box_for(path)
       if path.name.eql? 'polygon'
         points.in_groups_of(2).map{ |grp| { x: grp[0], y: grp[-1] } }.tap do |points|
           points.map_send(:[], :y).min.tap do |min|
-            if (min = min.to_f) < 0
+            if min < 0
               box.y -= min
               box.height += min
             end
