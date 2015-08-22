@@ -52,8 +52,8 @@ def bounding_box_for(path)
         points.in_groups_of(2).map{ |grp| { x: grp[0], y: grp[-1] } }.tap do |points|
           points.map_send(:[], :y).min.tap do |min|
             if min < 0
-              box.y -= min
-              box.height += min
+              box.y += min
+              box.height -= min
             end
           end
         end
@@ -110,7 +110,7 @@ ARGV.each do |filename|
       
       bbox = bounding_box_for(area)
 
-      bbox.each{ |k, v| container[k] = v }
+      bbox.to_h.each{ |k, v| container[k] = v }
     
       if File.exist?(filename) and not options.force
         puts "Skipping Existing: #{filename}"
