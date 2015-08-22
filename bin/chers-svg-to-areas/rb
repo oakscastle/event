@@ -17,29 +17,48 @@ puts <<INFO if ARGV.empty?
   Output: JSON matching https://github.com/oakscastle/event/
 INFO
 
-options = OpenStruct.new
+options = OpenStruct.new(host: 'http://localhost/')
 OptionParser.new do |opts|
   opts.on("-f", "--force", 'Overwrite') do |v|
     options.force = v
   end
+  opts.on("-h", "--host [URL]", 'Location where files will be hosted') do |h|
+    options.host = h
+    options.host += '/' if not h[-1].eql? '/'
+  end
 end.parse!
 
 def bounding_box_for(path)
+  path = path.children.select{ |child| child.kind_of? Nokogiri::XML::Element }.first if path.name == 'g'
+  
   case path.name
   when 'rect'
     path.to_h.slice(*%w(x y width height)).each_with_object({}){ |(k, v), obj| obj[k.to_sym] = v }
-  when 'polygon', 'path'
+  when 'polygon', 'path', 'polyline'
     drawing = Magick::Draw.new
     canvas = Magick::Image.new(10000,10000) { self.background_color = 'white' }
     case path.name
-    when 'polygon'
-      drawing.polygon *path[:points].split(/\s+|,/)
+    when 'polyline', 'polygon'
+      points = path[:points].split(/\s+|,/)
+      drawing.send(path.name, *points)
     when 'path'
       drawing.path path[:d]
     end
     drawing.draw canvas
     canvas.trim!
-    { x: canvas.page.x, y: canvas.page.y, width: canvas.columns, height: canvas.rows }
+
+    OpenStruct.new({ x: canvas.page.x, y: canvas.page.y, width: canvas.columns, height: canvas.rows }).tap do |box|
+      if path.name.eql? 'polygon'
+        points.in_groups_of(2).map{ |grp| { x: grp[0], y: grp[-1] } }.tap do |points|
+          points.map_send(:[], :y).min.tap do |min|
+            if (min = min.to_f) < 0
+              box.y -= min
+              box.height += min
+            end
+          end
+        end
+      end
+    end
   else
 =begin
     images = Magick::Image.from_blob(path.to_xml) do
@@ -64,7 +83,6 @@ end
 ARGV.each do |filename|
   svg = File.open(filename){ |file| Nokogiri::XML(file) }
   base = URI.unescape(svg.at_xpath('//@area:base').value)
-  host = "http://localhost/"
 
   svg.xpath('//*[@area:id]').map do |area|
     name = area.attributes['id'].value
@@ -74,7 +92,7 @@ ARGV.each do |filename|
     obj = {
       id: id.gsub(/\//, '∕'),
       name: name,
-      image: "#{host}#{filename}"
+      image: "#{options.host}#{filename}"
     }
 
     container = {
@@ -118,7 +136,7 @@ ARGV.each do |filename|
         areas.push({
                      id: 'house',
                      name: 'The First Floor',
-                     image: "#{host}#{base}/svg",
+                     image: "#{options.host}#{base}/svg",
                      containers: out.map(&:container).map_send(:[], :id)
                    })
         file.write(JSON::pretty_generate(JSON::parse({ areas: areas, containers: out.map(&:container) }.to_json)))
