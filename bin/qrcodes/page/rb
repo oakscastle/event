@@ -1,0 +1,33 @@
+#!ruby
+# coding: utf-8
+
+require 'rqrcode'
+require 'ostruct'
+require 'nokogiri'
+require 'base64'
+require 'securerandom'
+
+dims = OpenStruct.new({ rows: 4, cols: 6, width: 10, height: 10 })
+pad = 0.5
+
+Nokogiri::XML::Document.new.tap do |doc|
+  out = Nokogiri::XML::Node.new('svg', doc)
+  out[:viewBox] = "0 0 #{dims.width * dims.rows} #{dims.height * dims.cols}"
+  doc.add_child(out)
+
+  dims.rows.times do |row|
+    dims.cols.times do |col|
+      code = Base64::urlsafe_encode64([Time.now.to_i].pack('U*')) + SecureRandom.base64(12)
+      RQRCode::QRCode.new("http://fück.net?qr=#{code}", size: 5, level: :h).tap do |qr|
+        svg = Nokogiri::XML(qr.as_svg).root
+        out[:xmlns] = svg.namespaces['xmlns']
+        svg[:code] = code
+        svg[:x], svg[:y] = dims.width * row + pad, dims.height * col + pad
+        svg[:viewBox] = "0 0 #{svg[:width]} #{svg[:height]}"
+        svg[:width], svg[:height] = dims.width - 2 * pad, dims.height - 2 * pad
+        out.add_child(svg)
+      end
+    end
+  end
+  puts doc.to_xml
+end
